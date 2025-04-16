@@ -1,211 +1,16 @@
 
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { Clock, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight, Filter, SlidersHorizontal, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-// Sample data - in a real app, this would come from an API based on the category
-const getCategoryArticles = (category: string) => {
-  const articles = {
-    technology: [
-      {
-        id: 101,
-        title: "Apple's New VR Headset Sees Strong Pre-orders Despite High Price",
-        excerpt: "The tech giant's new device is selling well in spite of its premium positioning in the market. Industry analysts point to the company's loyal customer base and cutting-edge features as key factors driving demand.",
-        imageUrl: "https://images.unsplash.com/photo-1564466809058-bf4114d55352?auto=format&fit=crop&q=80&w=800",
-        readTime: "4 min read",
-        date: "Apr 12, 2025",
-        author: "Sarah Chen"
-      },
-      {
-        id: 102,
-        title: "The Rising Concerns of AI Generated Content in Academia",
-        excerpt: "Universities are grappling with new challenges as AI tools become more sophisticated. Faculty members report increasing difficulty in distinguishing between student-written papers and AI-generated content, raising questions about academic integrity.",
-        imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800",
-        readTime: "7 min read",
-        date: "Apr 10, 2025",
-        author: "Michael Rodriguez"
-      },
-      {
-        id: 103,
-        title: "Quantum Computing Milestone Achieved By Research Team",
-        excerpt: "Scientists announce breakthrough that could revolutionize computing power. The team successfully demonstrated quantum advantage on a practical problem, potentially opening the door to real-world applications years ahead of schedule.",
-        imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-        date: "Apr 9, 2025",
-        author: "Dr. Eliza Thornton"
-      },
-      {
-        id: 104,
-        title: "New Programming Language Aims to Simplify AI Development",
-        excerpt: "A team of developers has released an open-source programming language specifically designed for artificial intelligence applications. The language promises to reduce development time while improving readability and maintenance.",
-        imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800",
-        readTime: "6 min read",
-        date: "Apr 8, 2025",
-        author: "James Wilson"
-      },
-      {
-        id: 105,
-        title: "Tech Companies Shifting Focus to Sustainable Manufacturing",
-        excerpt: "Major tech firms announce new initiatives to reduce their environmental impact. The industry-wide shift includes commitments to carbon-neutral production, recyclable components, and extended device lifecycles.",
-        imageUrl: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-        date: "Apr 7, 2025",
-        author: "Anna Patel"
-      },
-      {
-        id: 106,
-        title: "Cybersecurity Experts Warn of New Sophisticated Phishing Techniques",
-        excerpt: "Security researchers have identified an alarming rise in advanced phishing attacks targeting corporate employees. The new methods combine AI-generated content with deep social engineering to bypass traditional security measures.",
-        imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800",
-        readTime: "8 min read",
-        date: "Apr 5, 2025",
-        author: "Thomas Blackwell"
-      },
-    ],
-    politics: [
-      {
-        id: 201,
-        title: "Global Summit on Climate Change Produces New Agreements",
-        excerpt: "World leaders have committed to more ambitious goals following intense negotiations. The revised targets include faster transitions to renewable energy and increased funding for climate adaptation in vulnerable regions.",
-        imageUrl: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=800",
-        readTime: "8 min read",
-        date: "Apr 14, 2025",
-        author: "Emma Richardson"
-      },
-      {
-        id: 202,
-        title: "Election Polls Show Tight Race in Key Battleground States",
-        excerpt: "Latest polling data reveals neck-and-neck competition with just weeks until voting day. Analysts point to economic concerns and healthcare policy as the primary issues driving voter decisions in these crucial regions.",
-        imageUrl: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&q=80&w=800",
-        readTime: "6 min read",
-        date: "Apr 13, 2025",
-        author: "Daniel Foster"
-      },
-      {
-        id: 203,
-        title: "New Trade Agreements Set to Reshape Regional Economics",
-        excerpt: "Experts analyze the potential impact of recently signed international trade deals. The agreements are expected to boost export opportunities for agricultural products while introducing new regulatory frameworks for digital services.",
-        imageUrl: "https://images.unsplash.com/photo-1444664597500-035db93e2323?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-        date: "Apr 11, 2025",
-        author: "Sophia Martinez"
-      },
-      {
-        id: 204,
-        title: "Local Governments Implement Innovative Housing Solutions",
-        excerpt: "Several major cities have launched experimental programs to address affordable housing shortages. The initiatives combine zoning reforms, public-private partnerships, and new construction technologies to increase housing supply.",
-        imageUrl: "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&q=80&w=800",
-        readTime: "7 min read",
-        date: "Apr 9, 2025",
-        author: "Marcus Johnson"
-      },
-      {
-        id: 205,
-        title: "Constitutional Reform Proposal Garners Widespread Debate",
-        excerpt: "Legal scholars and political activists weigh in on controversial amendments being considered by the legislature. The proposed changes would alter the balance of power between branches of government and revise electoral processes.",
-        imageUrl: "https://images.unsplash.com/photo-1589262804704-c5aa9e6def89?auto=format&fit=crop&q=80&w=800",
-        readTime: "9 min read",
-        date: "Apr 7, 2025",
-        author: "Dr. Alexandra Kim"
-      },
-    ],
-    business: [
-      {
-        id: 301,
-        title: "Startup Secures Record Funding for Sustainable Energy Storage",
-        excerpt: "A cleantech venture has raised $300 million in Series B funding to scale production of its innovative battery technology. The company claims its solution offers twice the energy density of current lithium-ion batteries at a competitive price point.",
-        imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-        date: "Apr 15, 2025", 
-        author: "Jordan Taylor"
-      },
-      {
-        id: 302,
-        title: "Major Retailer Announces Shift to Hybrid Shopping Experience",
-        excerpt: "One of the largest retail chains is transforming its brick-and-mortar locations into integrated digital-physical spaces. The redesigned stores will feature expanded pickup areas, augmented reality product displays, and personalized shopping assistance.",
-        imageUrl: "https://images.unsplash.com/photo-1556742031-c6961e8560b0?auto=format&fit=crop&q=80&w=800",
-        readTime: "6 min read",
-        date: "Apr 13, 2025",
-        author: "Rachel Wong"
-      },
-      {
-        id: 303,
-        title: "Central Bank Signals New Approach to Inflation Targets",
-        excerpt: "Financial markets respond to policy shifts announced during yesterday's monetary policy meeting. The updated framework acknowledges structural economic changes and introduces more flexibility in how inflation is measured and managed.",
-        imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=800",
-        readTime: "7 min read",
-        date: "Apr 11, 2025",
-        author: "Victor Alvarez"
-      },
-    ],
-    science: [
-      {
-        id: 401,
-        title: "Breakthrough in Fusion Energy Brings Commercial Viability Closer",
-        excerpt: "Scientists at a national laboratory have maintained a fusion reaction for a record duration, marking significant progress toward practical energy generation. The achievement addresses one of the key challenges that has limited fusion's commercial application.",
-        imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
-        readTime: "6 min read",
-        date: "Apr 14, 2025",
-        author: "Dr. Neil Crawford"
-      },
-      {
-        id: 402,
-        title: "Marine Biologists Discover Unexpected Ecosystem in Deep Ocean Trench",
-        excerpt: "A research expedition has documented dozens of previously unknown species living in one of Earth's most extreme environments. The findings challenge existing theories about the limits of life and may have implications for the search for extraterrestrial organisms.",
-        imageUrl: "https://images.unsplash.com/photo-1581093458791-9ea22992d7c2?auto=format&fit=crop&q=80&w=800",
-        readTime: "8 min read",
-        date: "Apr 12, 2025",
-        author: "Dr. Laura Chen"
-      },
-      {
-        id: 403,
-        title: "Revolutionary Material Could Transform Electronics Manufacturing",
-        excerpt: "Researchers have developed a new type of semiconductor with unique electrical properties that could lead to faster, more efficient devices. The material can be produced using existing manufacturing processes, potentially enabling rapid adoption by industry.",
-        imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-        date: "Apr 10, 2025",
-        author: "Dr. Amir Hassan"
-      },
-    ],
-    health: [
-      {
-        id: 501,
-        title: "Clinical Trial Shows Promise for Early Alzheimer's Intervention",
-        excerpt: "A novel treatment approach targeting protein aggregation has demonstrated significant benefits in patients with mild cognitive impairment. The multi-year study suggests that early intervention may slow or even halt disease progression in some individuals.",
-        imageUrl: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800",
-        readTime: "7 min read",
-        date: "Apr 15, 2025",
-        author: "Dr. Maria Sanchez"
-      },
-      {
-        id: 502,
-        title: "Medical Researchers Develop Improved Diabetes Management System",
-        excerpt: "A team of biomedical engineers has created an integrated monitoring and delivery device that automatically adjusts insulin levels. The system combines continuous glucose monitoring with machine learning to predict and prevent blood sugar fluctuations.",
-        imageUrl: "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=80&w=800",
-        readTime: "6 min read",
-        date: "Apr 13, 2025",
-        author: "Dr. James Wilson"
-      },
-      {
-        id: 503,
-        title: "Study Reveals Unexpected Benefits of Moderate Exercise in Older Adults",
-        excerpt: "New research challenges conventional wisdom about exercise intensity for seniors. The findings suggest that even light physical activity can significantly improve cognitive function and emotional well-being when performed consistently.",
-        imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-        date: "Apr 11, 2025",
-        author: "Dr. Elizabeth Park"
-      },
-    ]
-  };
-  
-  // Return articles for the requested category, or empty array if not found
-  return articles[category as keyof typeof articles] || [];
-};
+import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { categoryArticles } from '@/data/articles';
+import LoadingArticles from '@/components/LoadingArticles';
 
 // Function to get proper title case for the category
 const getCategoryTitle = (category: string) => {
@@ -215,7 +20,41 @@ const getCategoryTitle = (category: string) => {
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
   const categoryTitle = category ? getCategoryTitle(category) : '';
-  const articles = category ? getCategoryArticles(category) : [];
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 6;
+
+  useEffect(() => {
+    // Simulate loading data
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      if (category && categoryArticles[category as keyof typeof categoryArticles]) {
+        setArticles(categoryArticles[category as keyof typeof categoryArticles]);
+      } else {
+        setArticles([]);
+      }
+      setIsLoading(false);
+      setCurrentPage(1);
+    }, 800);
+  }, [category]);
+
+  // Calculate pagination
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
+  const totalPages = Math.ceil(articles.length / articlesPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Scroll to top when the component mounts
   useEffect(() => {
@@ -239,6 +78,15 @@ const CategoryPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Subscribe to newsletter for this category
+  const handleSubscribe = () => {
+    toast({
+      title: "Subscribed!",
+      description: `You're now subscribed to ${categoryTitle} updates.`,
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white relative">
       {/* Progress bar */}
@@ -259,23 +107,77 @@ const CategoryPage = () => {
             <div className="h-1 w-24 bg-flame"></div>
           </div>
 
-          {articles.length > 0 ? (
+          {/* Subscribe and View Options */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 animate-fade-in">
+            <button 
+              onClick={handleSubscribe}
+              className="px-4 py-2 bg-flame text-white rounded-md hover:bg-midnight transition-colors mb-4 sm:mb-0 flex items-center"
+            >
+              <BookOpen size={16} className="mr-2" />
+              Subscribe to {categoryTitle}
+            </button>
+            
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setView('grid')} 
+                className={cn(
+                  "p-2 rounded-md transition-colors",
+                  view === 'grid' ? "bg-slate text-flame" : "bg-white text-dimgray hover:bg-slate/50"
+                )}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+              </button>
+              <button 
+                onClick={() => setView('list')} 
+                className={cn(
+                  "p-2 rounded-md transition-colors",
+                  view === 'list' ? "bg-slate text-flame" : "bg-white text-dimgray hover:bg-slate/50"
+                )}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" x2="21" y1="6" y2="6" /><line x1="8" x2="21" y1="12" y2="12" /><line x1="8" x2="21" y1="18" y2="18" /><line x1="3" x2="3.01" y1="6" y2="6" /><line x1="3" x2="3.01" y1="12" y2="12" /><line x1="3" x2="3.01" y1="18" y2="18" /></svg>
+              </button>
+              <button 
+                className="p-2 rounded-md bg-white text-dimgray hover:bg-slate/50 transition-colors md:flex items-center hidden"
+              >
+                <SlidersHorizontal size={20} />
+              </button>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <LoadingArticles count={6} view={view} />
+          ) : articles.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 animate-fade-in">
-                {articles.map((article) => (
+              <div className={cn(
+                "mb-10 animate-fade-in",
+                view === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"
+              )}>
+                {currentArticles.map((article) => (
                   <Card 
                     key={article.id} 
-                    className="overflow-hidden hover:shadow-lg transition-shadow duration-300 hover-scale border-slate"
+                    className={cn(
+                      "overflow-hidden hover:shadow-lg transition-shadow duration-300 hover-scale border-slate",
+                      view === 'list' && "flex flex-col md:flex-row"
+                    )}
                   >
-                    <a href={`/article/${article.id}`} className="block">
-                      <div className="aspect-w-16 aspect-h-9 relative overflow-hidden">
+                    <Link to={`/article/${article.id}`} className={cn("block", view === 'list' && "flex flex-col md:flex-row w-full")}>
+                      <div className={cn(
+                        "aspect-w-16 aspect-h-9 relative overflow-hidden",
+                        view === 'list' ? "md:w-1/3 h-48 md:h-auto" : ""
+                      )}>
                         <img 
                           src={article.imageUrl} 
                           alt={article.title}
-                          className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
+                          className={cn(
+                            "w-full h-48 object-cover hover:scale-105 transition-transform duration-500",
+                            view === 'list' && "md:h-full"
+                          )}
                         />
                       </div>
-                      <CardContent className="p-5">
+                      <CardContent className={cn(
+                        "p-5",
+                        view === 'list' && "md:w-2/3"
+                      )}>
                         <div className="flex justify-between items-center text-dimgray text-xs mb-2">
                           <span>{article.date}</span>
                           <div className="flex items-center">
@@ -283,10 +185,16 @@ const CategoryPage = () => {
                             <span>{article.readTime}</span>
                           </div>
                         </div>
-                        <h3 className="text-xl font-bold mb-2 text-jet line-clamp-2 font-playfair">
+                        <h3 className={cn(
+                          "font-bold mb-2 text-jet font-playfair",
+                          view === 'grid' ? "text-xl line-clamp-2" : "text-xl md:text-2xl"
+                        )}>
                           {article.title}
                         </h3>
-                        <p className="text-dimgray mb-3 text-sm line-clamp-3">
+                        <p className={cn(
+                          "text-dimgray mb-3 text-sm",
+                          view === 'grid' ? "line-clamp-3" : "line-clamp-2 md:line-clamp-3"
+                        )}>
                           {article.excerpt}
                         </p>
                         <div className="flex justify-between items-center">
@@ -294,38 +202,63 @@ const CategoryPage = () => {
                           <span className="text-flame text-sm font-medium story-link">Read More</span>
                         </div>
                       </CardContent>
-                    </a>
+                    </Link>
                   </Card>
                 ))}
               </div>
               
-              <Pagination className="mt-8 animate-fade-in">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive>1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">2</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+              {totalPages > 1 && (
+                <Pagination className="mt-8 animate-fade-in">
+                  <PaginationContent>
+                    {currentPage > 1 && (
+                      <PaginationItem>
+                        <PaginationPrevious 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage - 1);
+                          }} 
+                        />
+                      </PaginationItem>
+                    )}
+                    
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink 
+                          href="#" 
+                          isActive={currentPage === page}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(page);
+                          }}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    
+                    {currentPage < totalPages && (
+                      <PaginationItem>
+                        <PaginationNext 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage + 1);
+                          }} 
+                        />
+                      </PaginationItem>
+                    )}
+                  </PaginationContent>
+                </Pagination>
+              )}
             </>
           ) : (
             <div className="text-center py-20 animate-fade-in">
               <h2 className="text-2xl text-dimgray mb-4">No articles found in this category</h2>
               <p className="text-dimgray mb-6">Try exploring one of our other categories</p>
-              <a href="/" className="inline-block px-6 py-3 bg-flame text-white rounded-md hover:bg-midnight transition-colors">
+              <Link to="/" className="inline-block px-6 py-3 bg-flame text-white rounded-md hover:bg-midnight transition-colors">
                 Back to Home
-              </a>
+              </Link>
             </div>
           )}
         </div>
