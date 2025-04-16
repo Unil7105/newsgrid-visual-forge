@@ -1,18 +1,20 @@
 
 import React, { useState, useEffect, FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, Menu, X } from 'lucide-react';
+import { Search, User, Menu, X, Home, Newspaper, Bookmark, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,9 +29,8 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
+  // Close search when route changes
   useEffect(() => {
-    setMobileMenuOpen(false);
     setSearchOpen(false);
   }, [location.pathname]);
 
@@ -48,6 +49,14 @@ const Navbar = () => {
     }
   };
 
+  const categories = [
+    { name: 'Politics', path: '/category/politics', icon: <Newspaper size={20} /> },
+    { name: 'Technology', path: '/category/technology', icon: <Newspaper size={20} /> },
+    { name: 'Business', path: '/category/business', icon: <Newspaper size={20} /> },
+    { name: 'Science', path: '/category/science', icon: <Newspaper size={20} /> },
+    { name: 'Health', path: '/category/health', icon: <Newspaper size={20} /> },
+  ];
+
   return (
     <header 
       className={cn(
@@ -57,21 +66,36 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4 md:gap-8">
             <Link to="/" className="text-midnight font-playfair text-2xl font-bold">
               News<span className="text-flame">Grid</span>
             </Link>
             <nav className="hidden md:flex space-x-6">
-              <Link to="/category/politics" className="text-jet hover:text-flame transition-colors text-sm font-medium">Politics</Link>
-              <Link to="/category/technology" className="text-jet hover:text-flame transition-colors text-sm font-medium">Technology</Link>
-              <Link to="/category/business" className="text-jet hover:text-flame transition-colors text-sm font-medium">Business</Link>
-              <Link to="/category/science" className="text-jet hover:text-flame transition-colors text-sm font-medium">Science</Link>
-              <Link to="/category/health" className="text-jet hover:text-flame transition-colors text-sm font-medium">Health</Link>
-              <Link to="/about" className="text-jet hover:text-flame transition-colors text-sm font-medium">About</Link>
+              {categories.map((category) => (
+                <Link 
+                  key={category.path}
+                  to={category.path} 
+                  className={cn(
+                    "text-jet hover:text-flame transition-colors text-sm font-medium",
+                    location.pathname === category.path && "text-flame font-semibold"
+                  )}
+                >
+                  {category.name}
+                </Link>
+              ))}
+              <Link 
+                to="/about" 
+                className={cn(
+                  "text-jet hover:text-flame transition-colors text-sm font-medium",
+                  location.pathname === "/about" && "text-flame font-semibold"
+                )}
+              >
+                About
+              </Link>
             </nav>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button 
               className="text-jet hover:text-flame transition-colors p-2 rounded-full"
               onClick={() => setSearchOpen(!searchOpen)}
@@ -79,6 +103,7 @@ const Navbar = () => {
             >
               {searchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
+            
             <button 
               className="text-jet hover:text-flame transition-colors p-2 rounded-full"
               onClick={() => {
@@ -91,13 +116,92 @@ const Navbar = () => {
             >
               <User size={20} />
             </button>
-            <button 
-              className="md:hidden text-jet hover:text-flame transition-colors p-2 rounded-full"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+            
+            {isMobile && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button 
+                    className="md:hidden text-jet hover:text-flame transition-colors p-2 rounded-full"
+                    aria-label="Menu"
+                  >
+                    <Menu size={20} />
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="right" className="p-0 w-[75vw] sm:max-w-sm">
+                  <div className="flex flex-col h-full">
+                    <div className="p-4 border-b">
+                      <Link 
+                        to="/" 
+                        className="text-midnight font-playfair text-xl font-bold"
+                        onClick={() => document.body.click()} // Close sheet
+                      >
+                        News<span className="text-flame">Grid</span>
+                      </Link>
+                    </div>
+                    
+                    <nav className="flex-1 overflow-auto py-4">
+                      <Link
+                        to="/"
+                        className={cn(
+                          "flex items-center gap-3 py-3 px-6 text-jet hover:text-flame hover:bg-slate/20 transition-colors",
+                          location.pathname === "/" && "text-flame font-semibold bg-slate/10"
+                        )}
+                        onClick={() => document.body.click()} // Close sheet
+                      >
+                        <Home size={20} />
+                        <span className="font-medium">Home</span>
+                      </Link>
+                      
+                      {categories.map((category) => (
+                        <Link
+                          key={category.path}
+                          to={category.path}
+                          className={cn(
+                            "flex items-center gap-3 py-3 px-6 text-jet hover:text-flame hover:bg-slate/20 transition-colors",
+                            location.pathname === category.path && "text-flame font-semibold bg-slate/10"
+                          )}
+                          onClick={() => document.body.click()} // Close sheet
+                        >
+                          {category.icon}
+                          <span className="font-medium">{category.name}</span>
+                        </Link>
+                      ))}
+                      
+                      <Link
+                        to="/about"
+                        className={cn(
+                          "flex items-center gap-3 py-3 px-6 text-jet hover:text-flame hover:bg-slate/20 transition-colors",
+                          location.pathname === "/about" && "text-flame font-semibold bg-slate/10"
+                        )}
+                        onClick={() => document.body.click()} // Close sheet
+                      >
+                        <Info size={20} />
+                        <span className="font-medium">About</span>
+                      </Link>
+                    </nav>
+                    
+                    <div className="p-4 border-t mt-auto">
+                      <form onSubmit={handleSearchSubmit} className="relative">
+                        <input
+                          type="text"
+                          placeholder="Search articles..."
+                          className="w-full p-3 pr-12 border border-slate rounded-lg focus:outline-none focus:ring-2 focus:ring-flame focus:border-transparent"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button 
+                          type="submit"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dimgray hover:text-flame"
+                          aria-label="Submit search"
+                        >
+                          <Search size={20} />
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
           </div>
         </div>
 
@@ -123,25 +227,6 @@ const Navbar = () => {
             </form>
           </div>
         )}
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={cn(
-          "md:hidden fixed inset-0 top-16 bg-white transform transition-transform ease-in-out duration-300 z-40",
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        )}
-      >
-        <div className="p-4">
-          <nav className="flex flex-col space-y-4">
-            <Link to="/category/politics" className="text-jet hover:text-flame transition-colors py-2 px-4 text-lg font-medium">Politics</Link>
-            <Link to="/category/technology" className="text-jet hover:text-flame transition-colors py-2 px-4 text-lg font-medium">Technology</Link>
-            <Link to="/category/business" className="text-jet hover:text-flame transition-colors py-2 px-4 text-lg font-medium">Business</Link>
-            <Link to="/category/science" className="text-jet hover:text-flame transition-colors py-2 px-4 text-lg font-medium">Science</Link>
-            <Link to="/category/health" className="text-jet hover:text-flame transition-colors py-2 px-4 text-lg font-medium">Health</Link>
-            <Link to="/about" className="text-jet hover:text-flame transition-colors py-2 px-4 text-lg font-medium">About</Link>
-          </nav>
-        </div>
       </div>
     </header>
   );
