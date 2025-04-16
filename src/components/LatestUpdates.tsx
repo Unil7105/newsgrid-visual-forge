@@ -1,42 +1,43 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import TimeIndicator from './TimeIndicator';
 
 const latestUpdates = [
   {
     id: 1,
     title: "SpaceX Successfully Launches Satellite Constellation",
     excerpt: "The aerospace company deployed another batch of satellites into low Earth orbit.",
-    timeAgo: "1h ago",
+    timestamp: new Date(Date.now() - 60 * 60 * 1000), // 1 hour ago
     readTime: "3 min read",
   },
   {
     id: 2,
     title: "Major Pharmaceutical Breakthrough for Alzheimer's Treatment",
     excerpt: "New drug shows promising results in late-stage clinical trials for treating memory loss.",
-    timeAgo: "2h ago",
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
     readTime: "5 min read",
   },
   {
     id: 3,
     title: "Tech Giant Announces New Smartphone Lineup",
     excerpt: "Latest models feature significant camera improvements and extended battery life.",
-    timeAgo: "3h ago",
+    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
     readTime: "4 min read",
   },
   {
     id: 4,
     title: "Global Stock Markets React to Federal Reserve Announcement",
     excerpt: "Investors respond to the latest interest rate decision with cautious optimism.",
-    timeAgo: "4h ago",
+    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
     readTime: "6 min read",
   },
   {
     id: 5,
     title: "Climate Report Warns of Accelerating Polar Ice Melt",
     excerpt: "Scientists observe faster-than-expected changes in Arctic and Antarctic regions.",
-    timeAgo: "5h ago",
+    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
     readTime: "7 min read",
   },
 ];
@@ -58,9 +59,11 @@ const LatestUpdates = () => {
           {latestUpdates.map((update) => (
             <div key={update.id} className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-300 hover-scale">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <div className="bg-slate text-dimgray px-3 py-2 rounded-md text-sm font-medium min-w-[80px] text-center">
-                  {update.timeAgo}
-                </div>
+                <TimeIndicator 
+                  timestamp={update.timestamp} 
+                  showBadge={true}
+                  showIcon={false}
+                />
                 
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-jet mb-1 font-playfair">
@@ -70,7 +73,7 @@ const LatestUpdates = () => {
                     {update.excerpt}
                   </p>
                   <div className="flex items-center text-dimgray text-xs">
-                    <Clock size={12} className="mr-1" />
+                    <TimeIndicator timestamp={update.timestamp} showIcon={true} className="mr-3" />
                     <span>{update.readTime}</span>
                   </div>
                 </div>

@@ -3,18 +3,32 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Card, CardContent } from '@/components/ui/card';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { Clock, ArrowRight, Filter, SlidersHorizontal, BookOpen } from 'lucide-react';
+import { BookOpen, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { categoryArticles } from '@/data/articles';
 import LoadingArticles from '@/components/LoadingArticles';
+import ArticleCard from '@/components/ArticleCard';
 
 // Function to get proper title case for the category
 const getCategoryTitle = (category: string) => {
   return category.charAt(0).toUpperCase() + category.slice(1);
+};
+
+// Process article data to add timestamps
+const processArticles = (articles: any[]) => {
+  return articles.map((article, index) => {
+    // Create a timestamp based on index (older as index increases)
+    const hoursAgo = index + 1;
+    const timestamp = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
+    
+    return {
+      ...article,
+      timestamp
+    };
+  });
 };
 
 const CategoryPage = () => {
@@ -35,7 +49,8 @@ const CategoryPage = () => {
     
     setTimeout(() => {
       if (category && categoryArticles[category as keyof typeof categoryArticles]) {
-        setArticles(categoryArticles[category as keyof typeof categoryArticles]);
+        const rawArticles = categoryArticles[category as keyof typeof categoryArticles];
+        setArticles(processArticles(rawArticles));
       } else {
         setArticles([]);
       }
@@ -153,57 +168,7 @@ const CategoryPage = () => {
                 view === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"
               )}>
                 {currentArticles.map((article) => (
-                  <Card 
-                    key={article.id} 
-                    className={cn(
-                      "overflow-hidden hover:shadow-lg transition-shadow duration-300 hover-scale border-slate",
-                      view === 'list' && "flex flex-col md:flex-row"
-                    )}
-                  >
-                    <Link to={`/article/${article.id}`} className={cn("block", view === 'list' && "flex flex-col md:flex-row w-full")}>
-                      <div className={cn(
-                        "aspect-w-16 aspect-h-9 relative overflow-hidden",
-                        view === 'list' ? "md:w-1/3 h-48 md:h-auto" : ""
-                      )}>
-                        <img 
-                          src={article.imageUrl} 
-                          alt={article.title}
-                          className={cn(
-                            "w-full h-48 object-cover hover:scale-105 transition-transform duration-500",
-                            view === 'list' && "md:h-full"
-                          )}
-                        />
-                      </div>
-                      <CardContent className={cn(
-                        "p-5",
-                        view === 'list' && "md:w-2/3"
-                      )}>
-                        <div className="flex justify-between items-center text-dimgray text-xs mb-2">
-                          <span>{article.date}</span>
-                          <div className="flex items-center">
-                            <Clock size={12} className="mr-1" />
-                            <span>{article.readTime}</span>
-                          </div>
-                        </div>
-                        <h3 className={cn(
-                          "font-bold mb-2 text-jet font-playfair",
-                          view === 'grid' ? "text-xl line-clamp-2" : "text-xl md:text-2xl"
-                        )}>
-                          {article.title}
-                        </h3>
-                        <p className={cn(
-                          "text-dimgray mb-3 text-sm",
-                          view === 'grid' ? "line-clamp-3" : "line-clamp-2 md:line-clamp-3"
-                        )}>
-                          {article.excerpt}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs text-dimgray">By {article.author}</span>
-                          <span className="text-flame text-sm font-medium story-link">Read More</span>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
+                  <ArticleCard key={article.id} article={article} view={view} />
                 ))}
               </div>
               
