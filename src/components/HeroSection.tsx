@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -41,7 +42,7 @@ const HeroSection = () => {
           
           {/* Main Featured Story */}
           <div className="lg:col-span-8 relative overflow-hidden rounded-xl hover-scale group">
-            <a href="#" className="block">
+            <Link to={`/article/${featuredStories[0].id}`} className="block">
               <div className="relative h-[400px] md:h-[500px]">
                 <img 
                   src={featuredStories[0].imageUrl} 
@@ -52,9 +53,12 @@ const HeroSection = () => {
                 
                 <div className="absolute bottom-0 left-0 w-full p-6 md:p-8">
                   <div className="flex gap-3 mb-3">
-                    <span className="bg-flame text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                    <Link 
+                      to={`/category/${featuredStories[0].category.toLowerCase()}`}
+                      className="bg-flame text-white text-xs font-medium px-2.5 py-1 rounded-full"
+                    >
                       {featuredStories[0].category}
-                    </span>
+                    </Link>
                     {featuredStories[0].isBreaking && (
                       <span className="bg-red-600 text-white text-xs font-medium px-2.5 py-1 rounded-full animate-pulse">
                         Breaking
@@ -73,14 +77,14 @@ const HeroSection = () => {
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
           
           {/* Secondary Featured Stories */}
           <div className="lg:col-span-4 grid grid-rows-2 gap-6">
             {featuredStories.slice(1, 3).map((story) => (
               <div key={story.id} className="relative overflow-hidden rounded-xl hover-scale group">
-                <a href="#" className="block h-full">
+                <Link to={`/article/${story.id}`} className="block h-full">
                   <div className="relative h-[200px] md:h-[240px]">
                     <img 
                       src={story.imageUrl} 
@@ -91,9 +95,12 @@ const HeroSection = () => {
                     
                     <div className="absolute bottom-0 left-0 w-full p-4 md:p-6">
                       <div className="flex gap-2 mb-2">
-                        <span className="bg-flame text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                        <Link 
+                          to={`/category/${story.category.toLowerCase()}`}
+                          className="bg-flame text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                        >
                           {story.category}
-                        </span>
+                        </Link>
                       </div>
                       <h2 className="text-white text-lg md:text-xl font-bold mb-2 font-playfair line-clamp-2">
                         {story.title}
@@ -104,7 +111,7 @@ const HeroSection = () => {
                       </div>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
             ))}
           </div>

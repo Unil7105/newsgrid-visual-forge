@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -70,9 +71,9 @@ const CategoryGrid = () => {
               <h2 className="text-2xl md:text-3xl font-bold text-midnight font-playfair">
                 {category.name}
               </h2>
-              <a href="#" className="text-flame hover:text-midnight text-sm font-medium story-link">
+              <Link to={`/category/${category.name.toLowerCase()}`} className="text-flame hover:text-midnight text-sm font-medium story-link">
                 View All
-              </a>
+              </Link>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -84,7 +85,7 @@ const CategoryGrid = () => {
                     i === 0 && "md:col-span-2 lg:col-span-1"
                   )}
                 >
-                  <a href="#" className="block">
+                  <Link to={`/article/${story.id}`} className="block">
                     <div className="aspect-w-16 aspect-h-9 relative overflow-hidden">
                       <img 
                         src={story.imageUrl} 
@@ -104,7 +105,7 @@ const CategoryGrid = () => {
                         <span>{story.readTime}</span>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               ))}
             </div>

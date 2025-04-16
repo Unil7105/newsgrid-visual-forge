@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Flame } from 'lucide-react';
 
 const topics = [
@@ -24,16 +25,16 @@ const TrendingTopics = () => {
         
         <div className="flex flex-wrap gap-3">
           {topics.map((topic) => (
-            <a 
+            <Link 
               key={topic.id}
-              href={`#${topic.name.toLowerCase()}`}
+              to={`/search?tag=${topic.name.toLowerCase()}`}
               className="px-4 py-2 bg-white border border-slate rounded-full text-sm text-dimgray font-medium hover:bg-flame hover:text-white hover:border-flame transition-colors duration-200 flex items-center gap-2"
             >
               #{topic.name}
               <span className="bg-slate/60 text-dimgray px-1.5 py-0.5 rounded-full text-xs">
                 {topic.count}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

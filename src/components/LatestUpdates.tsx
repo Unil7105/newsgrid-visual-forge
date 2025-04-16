@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Clock, ArrowRight } from 'lucide-react';
 
 const latestUpdates = [
@@ -48,9 +49,9 @@ const LatestUpdates = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-midnight font-playfair">
             Latest Updates
           </h2>
-          <a href="#" className="text-flame hover:text-midnight text-sm font-medium story-link">
+          <Link to="/search" className="text-flame hover:text-midnight text-sm font-medium story-link">
             View All
-          </a>
+          </Link>
         </div>
         
         <div className="space-y-4">
@@ -74,12 +75,12 @@ const LatestUpdates = () => {
                   </div>
                 </div>
                 
-                <a 
-                  href="#" 
+                <Link 
+                  to={`/article/${update.id}`}
                   className="text-flame hover:bg-flame hover:text-white p-2 rounded-full transition-colors self-end sm:self-center"
                 >
                   <ArrowRight size={20} />
-                </a>
+                </Link>
               </div>
             </div>
           ))}
