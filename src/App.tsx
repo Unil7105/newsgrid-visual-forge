@@ -41,10 +41,10 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner position="bottom-right" />
-        <BrowserRouter>
+      <BrowserRouter>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner position="bottom-right" />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/category/:category" element={<CategoryPage />} />
@@ -54,8 +54,8 @@ const App = () => {
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+        </TooltipProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 };
