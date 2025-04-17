@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, User, MessageSquare, Bookmark, Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TimeIndicator from './TimeIndicator';
@@ -45,8 +46,6 @@ const featuredStories = [
 ];
 
 const HeroSection = () => {
-  const navigate = useNavigate();
-  
   return (
     <section className="pt-24 pb-10 animate-fade-in">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -115,7 +114,7 @@ const HeroSection = () => {
                 </div>
                 <div className="mt-4">
                   <Link 
-                    to={`/news/${featuredStories[0].id}`}
+                    to={`/article/${featuredStories[0].id}`}
                     className="text-flame bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors flex items-center w-fit"
                   >
                     <span className="mr-1">Read More</span>
@@ -184,7 +183,7 @@ const HeroSection = () => {
                     </div>
                     <div className="mt-2">
                       <Link 
-                        to={`/news/${story.id}`}
+                        to={`/article/${story.id}`}
                         className="text-white/90 hover:text-white transition-colors text-xs flex items-center w-fit"
                       >
                         <span className="mr-1">Read More</span>
