@@ -111,7 +111,7 @@ const LatestUpdates = () => {
                 </div>
                 
                 <Link 
-                  to={`/article/${update.id}`}
+                  to={`/news/${update.id}`}
                   className="text-flame hover:bg-flame hover:text-white p-2 rounded-full transition-colors self-end sm:self-center"
                 >
                   <ArrowRight size={20} />

@@ -114,7 +114,7 @@ const HeroSection = () => {
                 </div>
                 <div className="mt-4">
                   <Link 
-                    to={`/article/${featuredStories[0].id}`}
+                    to={`/news/${featuredStories[0].id}`}
                     className="text-flame bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors flex items-center w-fit"
                   >
                     <span className="mr-1">Read More</span>
@@ -183,7 +183,7 @@ const HeroSection = () => {
                     </div>
                     <div className="mt-2">
                       <Link 
-                        to={`/article/${story.id}`}
+                        to={`/news/${story.id}`}
                         className="text-white/90 hover:text-white transition-colors text-xs flex items-center w-fit"
                       >
                         <span className="mr-1">Read More</span>
