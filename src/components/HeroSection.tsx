@@ -52,7 +52,7 @@ const HeroSection = () => {
           
           {/* Main Featured Story */}
           <div className="lg:col-span-8 relative overflow-hidden rounded-xl hover-scale group">
-            <Link to={`/article/${featuredStories[0].id}`} className="block">
+            <Link to={`/news/${featuredStories[0].id}`} className="block">
               <div className="relative h-[400px] md:h-[500px]">
                 <img 
                   src={featuredStories[0].imageUrl} 
@@ -104,7 +104,7 @@ const HeroSection = () => {
                       <span>{featuredStories[0].commentCount} comments</span>
                     </div>
                     <Link 
-                      to={`/article/${featuredStories[0].id}`}
+                      to={`/news/${featuredStories[0].id}`}
                       className="text-flame bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors flex items-center ml-auto"
                     >
                       <span className="mr-1">Read More</span>
@@ -120,7 +120,7 @@ const HeroSection = () => {
           <div className="lg:col-span-4 grid grid-rows-2 gap-6">
             {featuredStories.slice(1, 3).map((story) => (
               <div key={story.id} className="relative overflow-hidden rounded-xl hover-scale group">
-                <Link to={`/article/${story.id}`} className="block h-full">
+                <Link to={`/news/${story.id}`} className="block h-full">
                   <div className="relative h-[200px] md:h-[240px]">
                     <img 
                       src={story.imageUrl} 
