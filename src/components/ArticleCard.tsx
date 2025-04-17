@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import TimeIndicator from './TimeIndicator';
+import { User, Bookmark, MessageSquare, Share2 } from 'lucide-react';
 
 interface ArticleCardProps {
   article: {
@@ -15,6 +16,8 @@ interface ArticleCardProps {
     readTime: string;
     timestamp?: Date | string;
     date?: string;
+    category?: string;
+    commentCount?: number;
   };
   view: 'grid' | 'list';
 }
@@ -50,6 +53,13 @@ const ArticleCard = ({ article, view }: ArticleCardProps) => {
               />
             </div>
           )}
+          {article.category && (
+            <div className="absolute top-2 right-2">
+              <span className="bg-flame text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                {article.category}
+              </span>
+            </div>
+          )}
         </div>
         <CardContent className={cn(
           "p-5",
@@ -61,8 +71,14 @@ const ArticleCard = ({ article, view }: ArticleCardProps) => {
             ) : (
               <span>{article.date}</span>
             )}
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <span>{article.readTime}</span>
+              {article.commentCount !== undefined && (
+                <div className="flex items-center text-dimgray">
+                  <MessageSquare size={12} className="mr-1" />
+                  <span>{article.commentCount}</span>
+                </div>
+              )}
             </div>
           </div>
           <h3 className={cn(
@@ -78,8 +94,18 @@ const ArticleCard = ({ article, view }: ArticleCardProps) => {
             {article.excerpt}
           </p>
           <div className="flex justify-between items-center">
-            <span className="text-xs text-dimgray">By {article.author}</span>
-            <span className="text-flame text-sm font-medium story-link">Read More</span>
+            <div className="flex items-center">
+              <User size={14} className="mr-1 text-dimgray" />
+              <span className="text-xs text-dimgray">By {article.author}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="text-dimgray hover:text-flame transition-colors" aria-label="Bookmark">
+                <Bookmark size={14} />
+              </button>
+              <button className="text-dimgray hover:text-flame transition-colors" aria-label="Share">
+                <Share2 size={14} />
+              </button>
+            </div>
           </div>
         </CardContent>
       </Link>
