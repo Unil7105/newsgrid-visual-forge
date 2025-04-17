@@ -30,7 +30,7 @@ const ArticleCard = ({ article, view }: ArticleCardProps) => {
         view === 'list' && "flex flex-col md:flex-row"
       )}
     >
-      <Link to={`/news/${article.id}`} className={cn("block", view === 'list' && "flex flex-col md:flex-row w-full")}>
+      <Link to={`/article/${article.id}`} className={cn("block", view === 'list' && "flex flex-col md:flex-row w-full")}>
         <div className={cn(
           "aspect-w-16 aspect-h-9 relative overflow-hidden",
           view === 'list' ? "md:w-1/3 h-48 md:h-auto" : ""
