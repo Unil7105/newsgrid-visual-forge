@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -7,7 +7,7 @@ import TimeIndicator from '@/components/TimeIndicator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { categoryArticles } from '@/data/articles';
-import { ArrowLeft, Clock, Share2, Bookmark, MessageSquare, User } from 'lucide-react';
+import { ArrowLeft, Clock, Share2, Bookmark, MessageSquare, User, ArrowRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ const NewsPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const numericId = id ? parseInt(id, 10) : 0;
+  const [scrollProgress, setScrollProgress] = useState(0);
   
   // Find the article across all categories
   const article = Object.values(categoryArticles)
@@ -35,7 +36,7 @@ const NewsPage = () => {
 
   const recommendedArticles = getRecommendedArticles();
 
-  // Scroll to top when component mounts
+  // Scroll to top when component mounts or id changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -45,12 +46,8 @@ const NewsPage = () => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.body.offsetHeight - window.innerHeight;
-      const scrollProgress = scrollTop / docHeight;
-      const progressBar = document.getElementById('progress-bar');
-      
-      if (progressBar) {
-        progressBar.style.width = `${scrollProgress * 100}%`;
-      }
+      const scrollPercent = scrollTop / docHeight;
+      setScrollProgress(scrollPercent * 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -78,6 +75,9 @@ const NewsPage = () => {
     toast.success('Article saved to bookmarks!');
   };
 
+  // Determine if this is a breaking news article (e.g., id === 1)
+  const isBreakingNews = numericId === 1;
+
   if (!article) {
     return (
       <div className="min-h-screen bg-white">
@@ -101,8 +101,8 @@ const NewsPage = () => {
       {/* Progress bar */}
       <div className="fixed top-0 left-0 w-full h-1 z-50 bg-transparent">
         <div 
-          id="progress-bar" 
-          className="h-full bg-flame transition-all duration-100 w-0"
+          style={{ width: `${scrollProgress}%` }}
+          className="h-full bg-flame transition-all duration-100"
         />
       </div>
       
@@ -117,54 +117,74 @@ const NewsPage = () => {
             <span>Back</span>
           </button>
 
-          <div className="mb-8 animate-fade-in">
-            <div className="mb-2">
-              <div className="flex flex-wrap gap-3 items-center">
-                <span className="bg-flame text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                  {article.tags && article.tags[0]}
+          <div className="relative rounded-xl overflow-hidden mb-8 animate-fade-in">
+            <img 
+              src={article.imageUrl} 
+              alt={article.title}
+              className="w-full h-[400px] md:h-[500px] object-cover brightness-[0.85]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-midnight/80 via-midnight/40 to-transparent" />
+            
+            <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+              <TimeIndicator 
+                timestamp={new Date(article.date)} 
+                showBadge={true} 
+                showIcon={false}
+                className="bg-white/80 text-midnight"
+              />
+              {isBreakingNews && (
+                <span className="bg-red-600 text-white text-xs font-medium px-2.5 py-1 rounded-full animate-pulse">
+                  Breaking
                 </span>
-                <TimeIndicator
-                  timestamp={new Date(article.date)}
-                  showBadge={false}
-                  className="text-dimgray"
-                />
-              </div>
+              )}
             </div>
-
-            <h1 className="text-3xl md:text-5xl font-bold text-midnight font-playfair mb-4 leading-tight">
-              {article.title}
-            </h1>
             
-            <p className="text-lg text-dimgray mb-6 max-w-3xl">
-              {article.excerpt}
-            </p>
-            
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <div className="flex items-center">
-                <div className="w-10 h-10 rounded-full bg-slate mr-3 flex items-center justify-center text-dimgray">
-                  <User size={18} />
-                </div>
-                <div>
-                  <p className="font-medium text-jet">{article.author}</p>
-                  <p className="text-dimgray text-sm">Staff Writer</p>
-                </div>
+            <div className="absolute bottom-0 left-0 w-full p-6 md:p-8">
+              <div className="flex gap-3 mb-3">
+                <a 
+                  href={`/category/${article.tags && article.tags[0].toLowerCase()}`}
+                  className="bg-flame text-white text-xs font-medium px-2.5 py-1 rounded-full"
+                >
+                  {article.tags && article.tags[0]}
+                </a>
               </div>
-              
-              <div className="flex items-center gap-4 text-dimgray text-sm">
+              <h1 className="text-white text-2xl md:text-4xl font-bold mb-3 font-playfair">
+                {article.title}
+              </h1>
+              <p className="text-white/90 mb-4 max-w-2xl text-sm md:text-base">
+                {article.excerpt}
+              </p>
+              <div className="flex flex-wrap items-center gap-4 text-white/80 text-sm">
                 <div className="flex items-center">
                   <Clock size={14} className="mr-1" />
                   <span>{article.readTime}</span>
                 </div>
+                <div className="flex items-center">
+                  <User size={14} className="mr-1" />
+                  <span>By {article.author}</span>
+                </div>
+                <div className="flex items-center">
+                  <MessageSquare size={14} className="mr-1" />
+                  <span>{article.commentsCount || 0} comments</span>
+                </div>
+                <div className="flex items-center gap-2 ml-auto">
+                  <button 
+                    onClick={handleBookmark}
+                    className="text-white/80 hover:text-white transition-colors" 
+                    aria-label="Bookmark"
+                  >
+                    <Bookmark size={14} />
+                  </button>
+                  <button 
+                    onClick={handleShare}
+                    className="text-white/80 hover:text-white transition-colors" 
+                    aria-label="Share"
+                  >
+                    <Share2 size={14} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="mb-8 rounded-xl overflow-hidden animate-fade-in">
-            <img 
-              src={article.imageUrl} 
-              alt={article.title}
-              className="w-full h-auto object-cover max-h-[500px]"
-            />
           </div>
           
           <div className="flex flex-col md:flex-row gap-8">
@@ -219,6 +239,13 @@ const NewsPage = () => {
                   Cras vel scelerisque magna purus libero, faucibus adipiscing.
                 </p>
               </article>
+              
+              <div className="flex justify-center mt-8">
+                <Button className="bg-flame hover:bg-flame/90 text-white flex items-center gap-2">
+                  Read More
+                  <ArrowRight size={16} />
+                </Button>
+              </div>
               
               <div className="mt-8 flex flex-wrap gap-2">
                 {article.tags && article.tags.map(tag => (
