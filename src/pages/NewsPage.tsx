@@ -209,7 +209,11 @@ const NewsPage = () => {
                 {relatedArticles.map(article => (
                   <ArticleCard 
                     key={article.id} 
-                    article={article} 
+                    article={{
+                      ...article,
+                      timestamp: new Date(article.date),
+                      commentCount: 5
+                    }} 
                     view="grid" 
                   />
                 ))}

@@ -6,53 +6,53 @@ import TimeIndicator from './TimeIndicator';
 
 const latestUpdates = [
   {
-    id: 1,
-    title: "SpaceX Successfully Launches Satellite Constellation",
-    excerpt: "The aerospace company deployed another batch of satellites into low Earth orbit.",
+    id: 101,
+    title: "Apple's New VR Headset Sees Strong Pre-orders Despite High Price",
+    excerpt: "The tech giant's new device is selling well in spite of its premium positioning in the market.",
     timestamp: new Date(Date.now() - 60 * 60 * 1000), // 1 hour ago
-    readTime: "3 min read",
-    author: "John Smith",
+    readTime: "4 min read",
+    author: "Sarah Chen",
     category: "Technology",
     commentCount: 8
   },
   {
-    id: 2,
-    title: "Major Pharmaceutical Breakthrough for Alzheimer's Treatment",
-    excerpt: "New drug shows promising results in late-stage clinical trials for treating memory loss.",
+    id: 501,
+    title: "Clinical Trial Shows Promise for Early Alzheimer's Intervention",
+    excerpt: "A novel treatment approach targeting protein aggregation has demonstrated significant benefits in patients with mild cognitive impairment.",
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-    readTime: "5 min read",
-    author: "Emma Chen",
+    readTime: "7 min read",
+    author: "Dr. Maria Sanchez",
     category: "Health",
     commentCount: 12
   },
   {
-    id: 3,
-    title: "Tech Giant Announces New Smartphone Lineup",
-    excerpt: "Latest models feature significant camera improvements and extended battery life.",
+    id: 701,
+    title: "Underdog Team Makes Historic Championship Run",
+    excerpt: "A squad that began the season with the lowest expectations has defied odds to reach the finals.",
     timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
-    readTime: "4 min read",
-    author: "Michael Rodriguez",
-    category: "Technology",
+    readTime: "7 min read",
+    author: "Marcus Johnson",
+    category: "Sports",
     commentCount: 5
   },
   {
-    id: 4,
-    title: "Global Stock Markets React to Federal Reserve Announcement",
-    excerpt: "Investors respond to the latest interest rate decision with cautious optimism.",
+    id: 301,
+    title: "Startup Secures Record Funding for Sustainable Energy Storage",
+    excerpt: "A cleantech venture has raised $300 million in Series B funding to scale production of its innovative battery technology.",
     timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    readTime: "6 min read",
-    author: "Sarah Johnson",
+    readTime: "5 min read",
+    author: "Jordan Taylor",
     category: "Business",
     commentCount: 3
   },
   {
-    id: 5,
-    title: "Climate Report Warns of Accelerating Polar Ice Melt",
-    excerpt: "Scientists observe faster-than-expected changes in Arctic and Antarctic regions.",
+    id: 401,
+    title: "Breakthrough in Fusion Energy Brings Commercial Viability Closer",
+    excerpt: "Scientists at a national laboratory have maintained a fusion reaction for a record duration, marking significant progress toward practical energy generation.",
     timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-    readTime: "7 min read",
-    author: "David Park",
-    category: "Environment",
+    readTime: "6 min read",
+    author: "Dr. Neil Crawford",
+    category: "Science",
     commentCount: 15
   },
 ];

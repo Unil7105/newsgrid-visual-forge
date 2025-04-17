@@ -3,61 +3,56 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { categoryArticles } from '@/data/articles';
 
 const categories = [
   {
     id: 1,
     name: "Technology",
-    stories: [
-      {
-        id: 101,
-        title: "Apple's New VR Headset Sees Strong Pre-orders Despite High Price",
-        excerpt: "The tech giant's new device is selling well in spite of its premium positioning.",
-        imageUrl: "https://images.unsplash.com/photo-1564466809058-bf4114d55352?auto=format&fit=crop&q=80&w=800",
-        readTime: "4 min read",
-      },
-      {
-        id: 102,
-        title: "The Rising Concerns of AI Generated Content in Academia",
-        excerpt: "Universities are grappling with new challenges as AI tools become more sophisticated.",
-        imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800",
-        readTime: "7 min read",
-      },
-      {
-        id: 103,
-        title: "Quantum Computing Milestone Achieved By Research Team",
-        excerpt: "Scientists announce breakthrough that could revolutionize computing power.",
-        imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-      },
-    ]
+    slug: "technology",
+    stories: categoryArticles.technology.slice(0, 3).map(article => ({
+      id: article.id,
+      title: article.title,
+      excerpt: article.excerpt,
+      imageUrl: article.imageUrl,
+      readTime: article.readTime,
+    }))
   },
   {
     id: 2,
     name: "Politics",
-    stories: [
-      {
-        id: 201,
-        title: "Global Summit on Climate Change Produces New Agreements",
-        excerpt: "World leaders have committed to more ambitious goals following intense negotiations.",
-        imageUrl: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=800",
-        readTime: "8 min read",
-      },
-      {
-        id: 202,
-        title: "Election Polls Show Tight Race in Key Battleground States",
-        excerpt: "Latest polling data reveals neck-and-neck competition with just weeks until voting day.",
-        imageUrl: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&q=80&w=800",
-        readTime: "6 min read",
-      },
-      {
-        id: 203,
-        title: "New Trade Agreements Set to Reshape Regional Economics",
-        excerpt: "Experts analyze the potential impact of recently signed international trade deals.",
-        imageUrl: "https://images.unsplash.com/photo-1444664597500-035db93e2323?auto=format&fit=crop&q=80&w=800",
-        readTime: "5 min read",
-      },
-    ]
+    slug: "politics",
+    stories: categoryArticles.politics.slice(0, 3).map(article => ({
+      id: article.id,
+      title: article.title,
+      excerpt: article.excerpt,
+      imageUrl: article.imageUrl,
+      readTime: article.readTime,
+    }))
+  },
+  {
+    id: 3,
+    name: "Business",
+    slug: "business",
+    stories: categoryArticles.business.slice(0, 3).map(article => ({
+      id: article.id,
+      title: article.title,
+      excerpt: article.excerpt,
+      imageUrl: article.imageUrl,
+      readTime: article.readTime,
+    }))
+  },
+  {
+    id: 4,
+    name: "Science",
+    slug: "science",
+    stories: categoryArticles.science.slice(0, 3).map(article => ({
+      id: article.id,
+      title: article.title,
+      excerpt: article.excerpt,
+      imageUrl: article.imageUrl,
+      readTime: article.readTime,
+    }))
   }
 ];
 
@@ -71,7 +66,7 @@ const CategoryGrid = () => {
               <h2 className="text-2xl md:text-3xl font-bold text-midnight font-playfair">
                 {category.name}
               </h2>
-              <Link to={`/category/${category.name.toLowerCase()}`} className="text-flame hover:text-midnight text-sm font-medium story-link">
+              <Link to={`/category/${category.slug}`} className="text-flame hover:text-midnight text-sm font-medium story-link">
                 View All
               </Link>
             </div>
@@ -85,7 +80,7 @@ const CategoryGrid = () => {
                     i === 0 && "md:col-span-2 lg:col-span-1"
                   )}
                 >
-                  <Link to={`/article/${story.id}`} className="block">
+                  <Link to={`/news/${story.id}`} className="block">
                     <div className="aspect-w-16 aspect-h-9 relative overflow-hidden">
                       <img 
                         src={story.imageUrl} 
